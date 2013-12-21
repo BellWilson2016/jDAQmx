@@ -1,14 +1,14 @@
 classdef task < handle
 
 	properties
-		handle
+		taskHandle	
 	end
 	methods
 		function aTask = task(taskName)
 			taskH = uint32(1);
 			[a,b,taskH] = calllib('libnidaqmx','DAQmxCreateTask',...
 						taskName,taskH);
-			aTask.handle = taskH;
+			aTask.taskHandle = taskH;
 		end
 		function name = getName(aTask)
 			np = libpointer('stringPtr');
