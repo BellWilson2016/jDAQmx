@@ -4,14 +4,14 @@
 %
 %%
 
-sampleRate = 1000;  % Hz
+sampleRate = 100;  % Hz
 trialLength =  10;  % Sec
 
 % Create a stimulus, should by a matrix of size (nSamples,nChannels)
 stimulus1 = zeros(trialLength*sampleRate,1);
-stimulus1(5000:6000) = 5;
+stimulus1(500:600) = 5;
 stimulus2 = zeros(trialLength*sampleRate,1);
-stimulus2(7000:8000) = 5;
+stimulus2(700:800) = 5;
 stimulus = [stimulus1,stimulus2];
 
 % Make a digital stimulus
@@ -35,11 +35,13 @@ AO.start();
 DI = digitalInput('Dev1');
 DI.addChannel(0:1);
 DI.setSampleRate(sampleRate,trialLength*sampleRate);
+DI.start();
 
 DO = digitalOutput('Dev1');
 DO.addChannel(2:3);
 DO.setSampleRate(sampleRate,trialLength*sampleRate);
 DO.putData(digStim);
+DO.start();
 
 % This also triggers the DI, AO, and DO
 AI.start();

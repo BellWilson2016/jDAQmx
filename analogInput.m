@@ -110,7 +110,7 @@ classdef analogInput < handle
 
 			% DAQmxReadAnalogF64 (Use numSampsPerChannel = -1)
 			sampsPerChan = -1;
-			timeOut = .25;
+			timeOut = 5;
 			samplesRead = uint32(1);
 			[err, data, samplesRead, empty] = calllib(AI.libName, 'DAQmxReadAnalogF64', AI.taskHandle,...
 				sampsPerChan, timeOut, DAQmx_Val_GroupByChannel,...

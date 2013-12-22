@@ -74,7 +74,7 @@ classdef digitalInput < handle
 
 		function start(DI)
 			% DAQmxStartTask
-			err = calllib(DI.libName, 'DAQmxStartTask', AI.taskHandle);
+			err = calllib(DI.libName, 'DAQmxStartTask', DI.taskHandle);
 			
 			if (err ~= 0 )
 				disp(['Error: ',num2str(err)]);
@@ -106,7 +106,7 @@ classdef digitalInput < handle
 			sampsPerChan = -1;
 			timeOut = .25;
 			samplesRead = uint32(1);
-			bytesPerSample = 1;
+			bytesPerSample = uint32(1); 
 			[err, data, samplesRead, bytesPerSample] = calllib(DI.libName, 'DAQmxReadDigitalLines', DI.taskHandle,...
 				sampsPerChan, timeOut, DAQmx_Val_GroupByChannel,...
 				data, dataSize, samplesRead, bytesPerSample, []);	
