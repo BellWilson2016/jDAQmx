@@ -21,6 +21,9 @@ classdef analogInput < handle
 
 		% Create a task
 		function AI = analogInput(deviceName)
+
+			import jDAQmx.*;
+
 			% Load the library, if necessary
 			AI.libName = jDAQmx();
 
@@ -78,6 +81,7 @@ classdef analogInput < handle
 		end
 
 		function start(AI)
+
 			% DAQmxStartTask
 			err = calllib(AI.libName, 'DAQmxStartTask', AI.taskHandle);
 			

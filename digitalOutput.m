@@ -21,6 +21,8 @@ classdef digitalOutput < handle
 
 		% Create a task
 		function DO = digitalOutput(deviceName)
+
+			import jDAQmx.*;
 			% Load the library, if necessary
 			DO.libName = jDAQmx();
 

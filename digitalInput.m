@@ -21,6 +21,9 @@ classdef digitalInput < handle
 
 		% Create a task
 		function DI = digitalInput(deviceName)
+
+			import jDAQmx.*;
+
 			% Load the library, if necessary
 			DI.libName = jDAQmx();
 

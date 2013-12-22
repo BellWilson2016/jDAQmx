@@ -4,6 +4,8 @@
 %
 %%
 
+import jDAQmx.*;
+
 sampleRate  = 10000;  % Hz
 trialLength =    10;  % Sec
 

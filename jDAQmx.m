@@ -9,6 +9,12 @@
 %	(3) Cross platform support. (Once pointed to the correct libraries, this MATLAB
 %		code should work for Windows, Linux, and Mac OS X, with DAQmx or DAQmx Base.)
 %
+%	Package info:
+%
+%		This code is distributed as a package. Don't forget to import it before use:
+%
+%			import jDAQmx.*
+%
 %	Basic functionality:
 %
 %		These functions are setup for analog input, and optional synchronized analog 
@@ -51,10 +57,17 @@
 %			but if you're regenerating from the hardware FIFO you can't modify it after the 
 %			task starts.
 %
+%	Errors:
+%
+%		Error checking and reporting is minimal. The most common error is trying to start 
+%	new tasks without first clearing the old ones.
+%
 %	JSB 12/2013
 %%	
 
 function libName = jDAQmx()
+
+	import jDAQmx.*;
 
 %% - Platform specific library locations - Change these! %%
 	libName = 'libnidaqmx';

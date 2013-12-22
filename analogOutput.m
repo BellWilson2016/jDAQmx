@@ -21,6 +21,9 @@ classdef analogOutput < handle
 
 		% Create a task
 		function AO = analogOutput(deviceName)
+
+			import jDAQmx.*;
+
 			% Load the library, if necessary
 			AO.libName = jDAQmx();
 
