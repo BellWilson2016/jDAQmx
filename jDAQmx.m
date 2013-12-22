@@ -1,13 +1,14 @@
 %%
 %		jDAQmx.m
 %
-%	This class provides a MATLAB interface to the NI DAQmx drivers. There are several 
+%	This packages provides a MATLAB interface to the NI DAQmx drivers. There are several 
 %	reasons one might want to use this instead of the Data Acquisition Toolbox:
 %
 %	(1) Using the drivers directly allows digital waveform generation and recording.
 %	(2) Advanced triggering and synchronization.
 %	(3) Cross platform support. (Once pointed to the correct libraries, this MATLAB
-%		code should work for Windows, Linux, and Mac OS X, with DAQmx or DAQmx Base.)
+%		code should work for Windows and Linux with DAQmx, and with minor modifications
+%		with DAQmx Base, which also available for Mac OS X.
 %
 %	Package info:
 %
@@ -56,6 +57,11 @@
 %		* Waveform regeneration can be done using either the hardware or software buffers,
 %			but if you're regenerating from the hardware FIFO you can't modify it after the 
 %			task starts.
+%		* NI Linux support is pretty attrocious. Currently NI only supports a small number of 
+%			Linux distributions, only on the v2.6 kernel, and these only in 32-bit. I've had 
+%			good luck with Scientific Linux v6 (32-bit). Note that the most recent 32-bit 
+%			MATLAB release is R2012a. You may be able to get DAQmx installed in a Debian 
+%			style system, but keep in mind you'll want the 2.6 kernel and 32-bit.
 %
 %	Errors:
 %
