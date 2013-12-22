@@ -111,10 +111,6 @@ classdef digitalInput < handle
 				sampsPerChan, timeOut, DAQmx_Val_GroupByChannel,...
 				data, dataSize, samplesRead, bytesPerSample, []);	
 
-				err
-				samplesRead
-				bytesPerSample
-
 			if (err ~= 0 )
 				disp(['Error: ',num2str(err)]);
 			end

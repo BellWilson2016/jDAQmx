@@ -5,9 +5,10 @@ function libName = jDAQmx()
 	headerFile = '/usr/local/include/NIDAQmx.h';
 
 	if ~libisloaded(libName)
-		warning('off','MATLAB:loadlibrary:parsewarnings');
+		warning('off','all');
+		disp(['Loading ', libName, '...']);
 		fList = loadlibrary(libFile,headerFile);
-		warning('on','MATLAB:loadlibrary:parsewarnings');
+		warning('on','all');
 	end
 end
 
