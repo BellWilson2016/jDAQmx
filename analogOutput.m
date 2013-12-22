@@ -64,21 +64,15 @@ classdef analogOutput < handle
 			AO.sampleRate = sampleRate;
 			AO.nSamples = numSamples;
 
-			% DAQmxCfgSampClkTiming
+			% Configure for sample rate and number of samples	
+			% Use the ai/SampleClock so it's correlated
+			% Trigger will come with this.
 			err = calllib(AO.libName, 'DAQmxCfgSampClkTiming',AO.taskHandle,...
-				'OnboardClock', AO.sampleRate, DAQmx_Val_Rising, DAQmx_Val_FiniteSamps, AO.nSamples);
+				'ai/SampleClock', AO.sampleRate, DAQmx_Val_Rising, DAQmx_Val_FiniteSamps, AO.nSamples);
 
 			if (err ~= 0)
 				disp(['Error: ',num2str(err)]);
 			end
-
-			err = calllib(AO.libName, 'DAQmxCfgDigEdgeStartTrig', AO.taskHandle,...
-				'ai/StartTrigger', DAQmx_Val_Rising);
-
-			if (err ~= 0)
-				disp(['Error: ',num2str(err)]);
-			end
-
 		end
 
 		function start(AO)
@@ -89,6 +83,7 @@ classdef analogOutput < handle
 				disp(['Error: ',num2str(err)]);
 			end
 		end
+
 
 		function wait(AO, waitTime)
 
