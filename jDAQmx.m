@@ -57,7 +57,7 @@
 %		* Waveform regeneration can be done using either the hardware or software buffers,
 %			but if you're regenerating from the hardware FIFO you can't modify it after the 
 %			task starts.
-%		* NI Linux support is pretty attrocious. Currently NI only supports a small number of 
+%		* NI Linux support is pretty atrocious. Currently NI only supports a small number of 
 %			Linux distributions, only on the v2.6 kernel, and these only in 32-bit. I've had 
 %			good luck with Scientific Linux v6 (32-bit). Note that the most recent 32-bit 
 %			MATLAB release is R2012a. You may be able to get DAQmx installed in a Debian 
