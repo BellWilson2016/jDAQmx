@@ -37,11 +37,11 @@ AO.putData(stimulus);
 AO.start();
 
 % Setup the digital channels. These also trigger off of AI start.
-DI = digitalInput('Dev1');
-DI.addChannel(0:1);
-DI.setSampleRate(sampleRate,nSamplesToOutput);
+%DI = digitalInput('Dev1');
+%DI.addChannel(0:1);
+%DI.setSampleRate(sampleRate,nSamplesToOutput);
 % Again, start the task so it will be ready to acquire when AI starts.
-DI.start();
+%DI.start();
 
 % Same drill for digital output.
 DO = digitalOutput('Dev1');
@@ -57,7 +57,7 @@ disp('Started acquisition waiting...');
 AI.wait();
 disp('Finished acquisition, getting data...');
 dataInAnalog  = AI.getData();
-dataInDigital = DI.getData();
+%dataInDigital = DI.getData();
 disp('Data done got got.');
 
 % Stop and clear the tasks to free resources for future use.
@@ -65,8 +65,8 @@ AI.stop();
 AI.clear();
 AO.stop(); 
 AO.clear();
-DI.stop();
-DI.clear();
+%DI.stop();
+%DI.clear();
 DO.stop();
 DO.clear();
 

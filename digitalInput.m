@@ -102,6 +102,7 @@ classdef digitalInput < handle
 		function data = getData(DI)
 
 			DAQmx_Val_GroupByChannel = 0;
+			DAQmx_Val_GroupByScanNumber = 1;
 
 			dataSize = DI.nChannels*DI.nSamples;
 			data = uint8(zeros(dataSize,1));
@@ -111,7 +112,7 @@ classdef digitalInput < handle
 			samplesRead = uint32(1);
 			bytesPerSample = uint32(1); 
 			[err, data, samplesRead, bytesPerSample] = calllib(DI.libName, 'DAQmxReadDigitalLines', DI.taskHandle,...
-				sampsPerChan, timeOut, DAQmx_Val_GroupByChannel,...
+				sampsPerChan, timeOut, DAQmx_Val_GroupByScanNumber,...
 				data, dataSize, samplesRead, bytesPerSample, []);	
 
 			if (err ~= 0 )

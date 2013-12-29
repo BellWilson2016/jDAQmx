@@ -108,6 +108,7 @@ classdef analogInput < handle
 		function data = getData(AI)
 
 			DAQmx_Val_GroupByChannel = 0;
+			DAQmx_Val_GroupByScanNumber = 1;
 
 			dataSize = AI.nChannels*AI.nSamples;
 			data = ones(dataSize,1);
@@ -117,7 +118,7 @@ classdef analogInput < handle
 			timeOut = 5;
 			samplesRead = uint32(1);
 			[err, data, samplesRead, empty] = calllib(AI.libName, 'DAQmxReadAnalogF64', AI.taskHandle,...
-				sampsPerChan, timeOut, DAQmx_Val_GroupByChannel,...
+				sampsPerChan, timeOut, DAQmx_Val_GroupByScanNumber,...
 				data, dataSize, samplesRead, []);	
 
 			if (err ~= 0 )
