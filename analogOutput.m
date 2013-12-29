@@ -76,6 +76,7 @@ classdef analogOutput < handle
 			if (err ~= 0)
 				disp(['Error: ',num2str(err)]);
 			end
+
 		end
 
 		function start(AO)
@@ -106,6 +107,7 @@ classdef analogOutput < handle
 		function putData(AO, data)
 
 			DAQmx_Val_GroupByChannel = 0;
+			DAQmx_Val_GroupByScanNumber = 1;
 
 			% Check to make sure it's the right size
 			if (size(data,1) ~= AO.nSamples) || (size(data,2) ~= AO.nChannels)
@@ -122,7 +124,7 @@ classdef analogOutput < handle
 			autoStart = 0;
 			samplesWritten = uint32(1);
 			[err dataOut samplesWritten d] = calllib(AO.libName, 'DAQmxWriteAnalogF64', AO.taskHandle,...
-				sampsPerChan, autoStart, timeOut, DAQmx_Val_GroupByChannel,...
+				sampsPerChan, autoStart, timeOut, DAQmx_Val_GroupByScanNumber,...
 				data, samplesWritten, []);	
 
 			if (err ~= 0)

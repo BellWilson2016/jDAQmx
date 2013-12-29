@@ -106,6 +106,7 @@ classdef digitalOutput < handle
 		function putData(DO, data)
 
 			DAQmx_Val_GroupByChannel = 0;
+			DAQmx_Val_GroupByScanNumber = 1;
 
 			% Check to make sure it's the right size
 			if (size(data,1) ~= DO.nSamples) || (size(data,2) ~= DO.nChannels)
@@ -122,7 +123,7 @@ classdef digitalOutput < handle
 			autoStart = 0;
 			samplesWritten = uint32(1);
 			[err dataOut samplesWritten d] = calllib(DO.libName, 'DAQmxWriteDigitalLines', DO.taskHandle,...
-				sampsPerChan, autoStart, timeOut, DAQmx_Val_GroupByChannel,...
+				sampsPerChan, autoStart, timeOut, DAQmx_Val_GroupByScanNumber,...
 				data, samplesWritten, []);	
 
 			if (err ~= 0)
