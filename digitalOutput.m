@@ -1,9 +1,28 @@
 %% 
 %		digitalOutput()
 %
-%		A class for NI DAQmx data acquisition from the libraries.
+%	A class for NI DAQmx data acquisition from the libraries. Analog output and digital IO take 
+%   their clocks from AI, so an AI object is a prerequisite for analog output and digital IO.
 %
-%		JSB 12/2013
+%	Methods:
+%
+%		DO = digitalOutput(deviceName);                 - Create an AO object
+%		DO.addChannel(channelList);                     - Add channels to the object
+%		                                                   (Channels are in port0)
+%		DO.setSampleRate(sampleRate,NsampPerChan);      - Set the sample rate and acquisition size
+%		                                                  these should match the AI object.
+%		DO.putData(someData);                           - Queue data for output. Should be size:
+%		                                                  NsampPerChan x length(channelList)
+%		                                                  Matrix entries must be 0 or 1.
+%		DO.start();                                     - Ready the task to start when AI starts.
+%		DO.wait();                                      - Wait for acquisition to complete
+%		DO.stop();                                      - Stop the running task.
+%		DO.clear();                                     - Clear the task to free up system resources.
+%
+%		deviceName is a string (eg. 'Dev1')
+%		channelList is a list of integers (eg. 0:1)
+%
+%	JSB 12/2013
 %%
 classdef digitalOutput < handle
 
@@ -39,8 +58,8 @@ classdef digitalOutput < handle
 			end
 		end
 
-		% By default, assign lines in port0
 		function addChannel(DO, channelList)
+		% Digital channels are added in port0
 
 			DAQmx_Val_ChanPerLine = 0;
 
@@ -67,8 +86,6 @@ classdef digitalOutput < handle
 			DO.sampleRate = sampleRate;
 			DO.nSamples = numSamples;
 
-			% Configure for sample rate and number of samples	
-			% Pull from ai/SampleClock, trigger comes with it...
 			err = calllib(DO.libName, 'DAQmxCfgSampClkTiming',DO.taskHandle,...
 				'ai/SampleClock', DO.sampleRate, DAQmx_Val_Rising, DAQmx_Val_FiniteSamps, DO.nSamples);
 
@@ -79,7 +96,7 @@ classdef digitalOutput < handle
 		end
 
 		function start(DO)
-			% DAQmxStartTask
+
 			err = calllib(DO.libName, 'DAQmxStartTask', DO.taskHandle);
 
 			if (err ~= 0)
@@ -94,7 +111,6 @@ classdef digitalOutput < handle
 				waitTime = -1;
 			end
 
-			% DAQmxWaitIntilTaskIsDone
 			err = calllib(DO.libName, 'DAQmxWaitUntilTaskDone', DO.taskHandle,...
 				waitTime);
 
@@ -104,17 +120,17 @@ classdef digitalOutput < handle
 		end
 
 		function putData(DO, data)
+		% Data should be size NsampPerChan x length(channelList), and only 0 or 1
 
 			DAQmx_Val_GroupByChannel = 0;
 			DAQmx_Val_GroupByScanNumber = 1;
 
-			% Check to make sure it's the right size
 			if (size(data,1) ~= DO.nSamples) || (size(data,2) ~= DO.nChannels)
 				disp(['Error: Input matrix should be size( nSamples, nChannels) - (',...
 						num2str(nSamples),', ',num2str(nChannels),')']);
 				return;
 			end
-			% Reformat to interleave data
+
 			data = data';
 			data = uint8(sign(data(:)));
 

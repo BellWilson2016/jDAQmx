@@ -1,9 +1,26 @@
 %% 
 %		analogOutput()
 %
-%		A class for NI DAQmx data acquisition from the libraries.
+%	A class for NI DAQmx data acquisition from the libraries. Analog output and digital IO take 
+%	their clocks from AI, so an AI object is a prerequisite for analog output and digital IO.
 %
-%		JSB 12/2013
+%	Methods:
+%
+%		AO = analogOutput(deviceName);                  - Create an AO object
+%		AO.addChannel(channelList);                     - Add channels to the object
+%		AO.setSampleRate(sampleRate,NsampPerChan);      - Set the sample rate and acquisition size
+%		                                                  these should match the AI object.
+%		AO.putData(someData);                           - Queue data for output. Should be size:
+%		                                                  NsampPerChan x length(channelList)
+%		AO.start();                                     - Ready the task to start when AI starts.
+%		AO.wait();                                      - Wait for acquisition to complete
+%		AO.stop();                                      - Stop the running task.
+%		AO.clear();                                     - Clear the task to free up system resources.
+%
+%		deviceName is a string (eg. 'Dev1')
+%		channelList is a list of integers (eg. 0:1)
+%
+%	JSB 12/2013
 %%
 classdef analogOutput < handle
 

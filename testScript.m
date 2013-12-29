@@ -1,6 +1,8 @@
 % testScript.m
 %
-% This demonstrates simultaneous analog and digital input and output using jDAQmx
+% This demonstrates simultaneous analog and digital input and output using jDAQmx.
+% Before you use it, make sure to you have NI DAQmx installed, and that you point
+% jDAQmx.m to the location of your .dll (or .so) file and the .h header file.
 %
 %%
 
@@ -18,7 +20,11 @@ stimulus = [stimulus1,stimulus2];
 
 % Make a digital stimulus
 % This should also be of size (nSamples, nChannels)
-digStim = sign(stimulus);
+digStim1 = zeros(trialLength*sampleRate,1);
+digStim1(60000:65000) = 1;
+digStim2 = zeros(trialLength*sampleRate,1);
+digStim2(80000:85000) = 1;
+digStim = sign([digStim1,digStim2]);
 
 % Setup the input channels - these are the main timebase for all the tasks.
 AI = analogInput('Dev1');	
@@ -37,11 +43,11 @@ AO.putData(stimulus);
 AO.start();
 
 % Setup the digital channels. These also trigger off of AI start.
-%DI = digitalInput('Dev1');
-%DI.addChannel(0:1);
-%DI.setSampleRate(sampleRate,nSamplesToOutput);
+DI = digitalInput('Dev1');
+DI.addChannel(0:1);
+DI.setSampleRate(sampleRate,nSamplesToOutput);
 % Again, start the task so it will be ready to acquire when AI starts.
-%DI.start();
+DI.start();
 
 % Same drill for digital output.
 DO = digitalOutput('Dev1');
@@ -57,7 +63,7 @@ disp('Started acquisition waiting...');
 AI.wait();
 disp('Finished acquisition, getting data...');
 dataInAnalog  = AI.getData();
-%dataInDigital = DI.getData();
+dataInDigital = DI.getData();
 disp('Data done got got.');
 
 % Stop and clear the tasks to free resources for future use.
@@ -65,8 +71,8 @@ AI.stop();
 AI.clear();
 AO.stop(); 
 AO.clear();
-%DI.stop();
-%DI.clear();
+DI.stop();
+DI.clear();
 DO.stop();
 DO.clear();
 

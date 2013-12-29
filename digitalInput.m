@@ -1,12 +1,27 @@
 %% 
 %		digitalInput()
 %
-%		A class for NI DAQmx data acquisition from the libraries.
+%	A class for NI DAQmx data acquisition from the libraries. Analog output and digital IO take 
+%	their clocks from AI, so an AI object is a prerequisite for analog output and digital IO.
 %
-%		JSB 12/2013
+%	Methods:
+%
+%		DI = analogInput(deviceName);                   - Create an AI object
+%		DI.addChannel(channelList);                     - Add channels to the object
+%		DI.setSampleRate(sampleRate,NsampPerChan);      - Set the sample rate and acquisition size
+%		DI.start();                                     - Ready the task to start when AI starts
+%		DI.wait();                                      - Wait for acquisition to complete
+%		dataIn = DI.getData();                          - Get the acquired data. Returns a matrix size:
+%		                                                   NsampPerChan x length(channelList)
+%		DI.stop();                                      - Stop the running task.
+%		DI.clear();                                     - Clear the task to free up system resources.
+%
+%		deviceName is a string (eg. 'Dev1')
+%		channelList is a list of integers (eg. 0:1)
+%
+%	JSB 12/2013
 %%
 classdef digitalInput < handle
-
 	properties
 		libName
 		taskHandle
@@ -66,7 +81,6 @@ classdef digitalInput < handle
 			DI.sampleRate = sampleRate;
 			DI.nSamples = numSamples;
 
-			% DAQmxCfgSampClkTiming
 			err = calllib(DI.libName, 'DAQmxCfgSampClkTiming',DI.taskHandle,...
 				'ai/SampleClock', DI.sampleRate, DAQmx_Val_Rising, DAQmx_Val_FiniteSamps, DI.nSamples);
 
@@ -76,7 +90,7 @@ classdef digitalInput < handle
 		end
 
 		function start(DI)
-			% DAQmxStartTask
+
 			err = calllib(DI.libName, 'DAQmxStartTask', DI.taskHandle);
 			
 			if (err ~= 0 )
@@ -90,7 +104,6 @@ classdef digitalInput < handle
 				waitTime = -1;
 			end
 
-			% DAQmxWaitIntilTaskIsDone
 			err = calllib(DI.libName, 'DAQmxWaitUntilTaskDone', DI.taskHandle,...
 				waitTime);
 

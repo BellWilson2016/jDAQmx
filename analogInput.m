@@ -1,9 +1,25 @@
 %% 
 %		analogInput()
 %
-%		A class for NI DAQmx data acquisition from the libraries.
+%	A class for NI DAQmx data acquisition from the libraries. Analog output and digital IO take 
+%	their clocks from AI, so an AI object is a prerequisite for analog output and digital IO.
 %
-%		JSB 12/2013
+%	Methods:
+%
+%		AI = analogInput(deviceName);                   - Create an AI object
+%		AI.addChannel(channelList);                     - Add channels to the object
+%		AI.setSampleRate(sampleRate,NsampPerChan);      - Set the sample rate and acquisition size
+%		AI.start();                                     - Start the acquisition task immediately
+%		AI.wait();                                      - Wait for acquisition to complete
+%		dataIn = AI.getData();                          - Get the acquired data. Returns a matrix size:
+%		                                                   NsampPerChan x length(channelList)
+%		AI.stop();                                      - Stop the running task.
+%		AI.clear();                                     - Clear the task to free up system resources.
+%
+%		deviceName is a string (eg. 'Dev1')
+%		channelList is a list of integers (eg. 0:1)
+%
+%	JSB 12/2013
 %%
 classdef analogInput < handle
 
@@ -71,7 +87,6 @@ classdef analogInput < handle
 			AI.sampleRate = sampleRate;
 			AI.nSamples = numSamples;
 
-			% DAQmxCfgSampClkTiming
 			err = calllib(AI.libName, 'DAQmxCfgSampClkTiming',AI.taskHandle,...
 				'OnboardClock', AI.sampleRate, DAQmx_Val_Rising, DAQmx_Val_FiniteSamps, AI.nSamples);
 
@@ -82,7 +97,6 @@ classdef analogInput < handle
 
 		function start(AI)
 
-			% DAQmxStartTask
 			err = calllib(AI.libName, 'DAQmxStartTask', AI.taskHandle);
 			
 			if (err ~= 0 )
@@ -96,7 +110,6 @@ classdef analogInput < handle
 				waitTime = -1;
 			end
 
-			% DAQmxWaitIntilTaskIsDone
 			err = calllib(AI.libName, 'DAQmxWaitUntilTaskDone', AI.taskHandle,...
 				waitTime);
 
@@ -113,7 +126,6 @@ classdef analogInput < handle
 			dataSize = AI.nChannels*AI.nSamples;
 			data = ones(dataSize,1);
 
-			% DAQmxReadAnalogF64 (Use numSampsPerChannel = -1)
 			sampsPerChan = -1;
 			timeOut = 5;
 			samplesRead = uint32(1);
