@@ -17,8 +17,10 @@
 %
 %	Basic functionality:
 %
-%		All I/O will use the analogInput clock, so an AI object must be created to use
+%		All digital I/O will use the analogInput clock, so an AI object must be created to use
 %		any other input or output. This ensures that all I/O will be synchronized.
+%       Analog output uses its own clock, but is triggered by the start of 
+%       the AI.
 %
 %		Create I/O objects like:
 %
@@ -53,20 +55,20 @@ function libName = jDAQmx()
 	import jDAQmx.*;
 
 %% - Platform specific library locations - Change these! %%
-% Unix platform info
-if isunix()
-	libName = 'libnidaqmx';
-	libFile = [libName,'.so'];
-	headerFile = '/usr/local/include/NIDAQmx.h';
-% PC platform info
-% You may need to provide full paths, so search for the files named below.
-% The Header file may be in a place like: 
-%	C:\Program Files\National Instruments\NI-DAQ\DAQmx ANSI C Dev\include\
-elseif ispc()
-	libName = 'libnidaqmx';
-	libFile = 'nicaiu.dll';	
-	headerFile = 'NIDAQmx.h';
-end
+	% Unix platform info
+	if isunix()
+		libName = 'libnidaqmx';
+		libFile = [libName,'.so'];
+		headerFile = '/usr/local/include/NIDAQmx.h';
+	% PC platform info
+	% You may need to provide full paths, so search for the files named below.
+	% The Header file may be in a place like: 
+	%	C:\Program Files\National Instruments\NI-DAQ\DAQmx ANSI C Dev\include\
+	elseif ispc()
+		libName = 'libnidaqmx';
+		libFile = 'nicaiu.dll';	
+		headerFile = 'NIDAQmx.h';
+	end
 
 
 %% - Code starts here

@@ -1,15 +1,15 @@
 %% 
 %		analogOutput()
 %
-%	A class for NI DAQmx data acquisition from the libraries. Analog output and digital IO take 
-%	their clocks from AI, so an AI object is a prerequisite for analog output and digital IO.
+%	A class for NI DAQmx data acquisition from the libraries. The AO uses its
+%   own clock, but this clock is triggered from the start of AI, so an AI 
+%   object is a prerequisite for analog output and digital IO.
 %
 %	Methods:
 %
 %		AO = analogOutput(deviceName);                  - Create an AO object
 %		AO.addChannel(channelList);                     - Add channels to the object
-%		AO.setSampleRate(sampleRate,NsampPerChan);      - Set the sample rate and acquisition size
-%		                                                  these should match the AI object.
+%		AO.setSampleRate(sampleRate,NsampPerChan);      - Set the sample rate and acquisition size.
 %		AO.putData(someData);                           - Queue data for output. Should be size:
 %		                                                  NsampPerChan x length(channelList)
 %		AO.start();                                     - Ready the task to start when AI starts.
@@ -85,10 +85,12 @@ classdef analogOutput < handle
 			AO.nSamples = numSamples;
 
 			% Configure for sample rate and number of samples	
-			% Use the ai/SampleClock so it's correlated
-			% Trigger will come with this.
 			err = calllib(AO.libName, 'DAQmxCfgSampClkTiming',AO.taskHandle,...
-				'ai/SampleClock', AO.sampleRate, DAQmx_Val_Rising, DAQmx_Val_FiniteSamps, AO.nSamples);
+				'OnboardClock', AO.sampleRate, DAQmx_Val_Rising, DAQmx_Val_FiniteSamps, AO.nSamples);
+            
+            % Configure the trigger to come from AI
+            err = calllib(AO.libName, 'DAQmxCfgDigEdgeStartTrig',AO.taskHandle,...
+                'ai/StartTrigger', DAQmx_Val_Rising);
 
 			if (err ~= 0)
 				disp(['Error: ',num2str(err)]);
