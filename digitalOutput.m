@@ -1,8 +1,8 @@
 %% 
 %		digitalOutput()
 %
-%	A class for NI DAQmx data acquisition from the libraries. Analog output and digital IO take 
-%   their clocks from AI, so an AI object is a prerequisite for analog output and digital IO.
+%	A class for NI DAQmx data acquisition from the libraries. Digital IO take 
+%   their clocks from analog IO, so an AI object is a prerequisite for analog output and digital IO.
 %
 %	Methods:
 %
@@ -10,7 +10,7 @@
 %		DO.addChannel(channelList);                     - Add channels to the object
 %		                                                   (Channels are in port0)
 %		DO.setSampleRate(sampleRate,NsampPerChan);      - Set the sample rate and acquisition size
-%		                                                  these should match the AI object.
+%		                                                  these should match the AO object.
 %		DO.putData(someData);                           - Queue data for output. Should be size:
 %		                                                  NsampPerChan x length(channelList)
 %		                                                  Matrix entries must be 0 or 1.
@@ -87,7 +87,7 @@ classdef digitalOutput < handle
 			DO.nSamples = numSamples;
 
 			err = calllib(DO.libName, 'DAQmxCfgSampClkTiming',DO.taskHandle,...
-				'ai/SampleClock', DO.sampleRate, DAQmx_Val_Rising, DAQmx_Val_FiniteSamps, DO.nSamples);
+				'ao/SampleClock', DO.sampleRate, DAQmx_Val_Rising, DAQmx_Val_FiniteSamps, DO.nSamples);
 
 			if (err ~= 0)
 				disp(['Error: ',num2str(err)]);

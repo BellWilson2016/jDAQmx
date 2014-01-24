@@ -1,8 +1,8 @@
 %% 
 %		digitalInput()
 %
-%	A class for NI DAQmx data acquisition from the libraries. Analog output and digital IO take 
-%	their clocks from AI, so an AI object is a prerequisite for analog output and digital IO.
+%	A class for NI DAQmx data acquisition from the libraries. Digital IO take 
+%	their clocks from AI and AO, so an AI object is a prerequisite for DI.
 %
 %	Methods:
 %
