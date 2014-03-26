@@ -27,13 +27,13 @@ digStim2(80000:85000) = 1;
 digStim = sign([digStim1,digStim2]);
 
 % Setup the input channels - these are the main timebase for all the tasks.
-AI = analogInput('Dev1');	
+AI = analogInput('/Dev1');	
 AI.addChannel(0:1);
 nSamplesToOutput = trialLength*sampleRate;
 AI.setSampleRate(sampleRate,nSamplesToOutput);
 
 % Setup the output channels - these trigger off the AI task.
-AO = analogOutput('Dev1');
+AO = analogOutput('/Dev1');
 AO.addChannel(0:1);
 AO.setSampleRate(sampleRate,nSamplesToOutput);
 % Put data into the output buffer and start the task. (No samples will
@@ -43,14 +43,14 @@ AO.putData(stimulus);
 AO.start();
 
 % Setup the digital channels. These also trigger off of AI start.
-DI = digitalInput('Dev1');
+DI = digitalInput('/Dev1');
 DI.addChannel(0:1);
 DI.setSampleRate(sampleRate,nSamplesToOutput);
 % Again, start the task so it will be ready to acquire when AI starts.
 DI.start();
 
 % Same drill for digital output.
-DO = digitalOutput('Dev1');
+DO = digitalOutput('/Dev1');
 DO.addChannel(2:3);
 DO.setSampleRate(sampleRate,nSamplesToOutput);
 % Again, put the data there, and start the task.
