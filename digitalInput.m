@@ -51,7 +51,10 @@ classdef digitalInput < handle
 					'DAQmxCreateTask', taskName, DI.taskHandle);
 
 			if (err ~= 0 )
-				disp(['Error: ',num2str(err)]);
+				disp(['DI Error: ',num2str(err)]);
+				disp('Pausing for retry...');
+				pause(1);
+				DI = digitalInput(deviceName);
 			end
 
 		end

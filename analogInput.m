@@ -31,6 +31,7 @@ classdef analogInput < handle
 		nSamples
 		nChannels
 		channelList
+        error
 	end
 
 	methods
@@ -51,8 +52,12 @@ classdef analogInput < handle
 			[err,b,AI.taskHandle] = calllib(AI.libName,...
 					'DAQmxCreateTask', taskName, AI.taskHandle);
 
+            AI.error = err;
 			if (err ~= 0 )
-				disp(['Error: ',num2str(err)]);
+				disp(['AI Error: ',num2str(err)]);
+				disp('Pausing for retry...');
+				pause(1);
+				AI = analogInput(deviceName);
 			end
 
 		end
@@ -72,6 +77,7 @@ classdef analogInput < handle
 					[AI.deviceName,'/ai',num2str(channelList(chN))],'', DAQmx_Val_Diff,...
 					-10,10, DAQmx_Val_Volts,'');
 
+                AI.error = err;
 				if (err ~= 0 )
 					disp(['Error: ',num2str(err)]);
 				end
@@ -90,6 +96,7 @@ classdef analogInput < handle
 			err = calllib(AI.libName, 'DAQmxCfgSampClkTiming',AI.taskHandle,...
 				'OnboardClock', AI.sampleRate, DAQmx_Val_Rising, DAQmx_Val_FiniteSamps, AI.nSamples);
 
+            AI.error = err;
 			if (err ~= 0 )
 				disp(['Error: ',num2str(err)]);
 			end
@@ -99,6 +106,7 @@ classdef analogInput < handle
 
 			err = calllib(AI.libName, 'DAQmxStartTask', AI.taskHandle);
 			
+            AI.error = err;
 			if (err ~= 0 )
 				disp(['Error: ',num2str(err)]);
 			end
@@ -112,7 +120,8 @@ classdef analogInput < handle
 
 			err = calllib(AI.libName, 'DAQmxWaitUntilTaskDone', AI.taskHandle,...
 				waitTime);
-
+            
+            AI.error = err;
 			if (err ~= 0 )
 				disp(['Error: ',num2str(err)]);
 			end
@@ -133,6 +142,7 @@ classdef analogInput < handle
 				sampsPerChan, timeOut, DAQmx_Val_GroupByScanNumber,...
 				data, dataSize, samplesRead, []);	
 
+            AI.error = err;
 			if (err ~= 0 )
 				disp(['Error: ',num2str(err)]);
 			end
@@ -144,6 +154,7 @@ classdef analogInput < handle
 
 			err = calllib(AI.libName, 'DAQmxStopTask', AI.taskHandle);
 
+            AI.error = err;
 			if (err ~= 0 )
 				disp(['Error: ',num2str(err)]);
 			end
@@ -153,6 +164,7 @@ classdef analogInput < handle
 
 			err = calllib(AI.libName, 'DAQmxClearTask', AI.taskHandle);
 
+            AI.error = err;
 			if (err ~= 0 )
 				disp(['Error: ',num2str(err)]);
 			end

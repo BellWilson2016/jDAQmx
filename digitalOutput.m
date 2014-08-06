@@ -54,7 +54,10 @@ classdef digitalOutput < handle
 					'DAQmxCreateTask', taskName, DO.taskHandle);
 
 			if (err ~= 0)
-				disp(['Error: ',num2str(err)]);
+				disp(['DO Error: ',num2str(err)]);
+				disp('Pausing for retry...');
+				pause(1);
+				DO = digitalOutput(deviceName);
 			end
 		end
 

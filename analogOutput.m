@@ -53,7 +53,10 @@ classdef analogOutput < handle
 					'DAQmxCreateTask', taskName, AO.taskHandle);
 
 			if (err ~= 0)
-				disp(['Error: ',num2str(err)]);
+				disp(['AO Error: ',num2str(err)]);
+                disp('Pausing for retry...');
+                pause(1);
+                AO = analogOutput(deviceName);
 			end
 		end
 
